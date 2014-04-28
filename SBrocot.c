@@ -5,37 +5,67 @@
  *      Author: mdbesoain
  */
 
-
-#include<stdio.h>
 #include <math.h>
-#include <stdbool.h>
-#include <time.h>
-#include <string.h>
-#include "sys/times.h"
-#include "sys/vtimes.h"
+#include <stdio.h>
 
+//#include <string.h>
+//#include <time.h>
+//#include "sys/times.h"
+//#include "sys/vtimes.h"
 
-void brocotTree(int a, int c)
-{
-	if (fmod(a/c, 1) != 0)
+ struct sternBrocotTree {
+	int denominador, numerador;
+	struct sternBrocotTree * right, *left;
+};
+
+ typedef struct sternBrocotTree tree;
+ tree * head;
+
+void printsternBrocotTree(tree *r) {
+	if (r != NULL)
 	{
+		printf("\n%d / %d\n", r->denominador, r->numerador);
 
-
+		printsternBrocotTree(r->left);
+		printsternBrocotTree(r->right);
 	}
-	else
+}
+void insertNode(int a, int b, int c, int d) {
+	struct sternBrocotTree *auxL;
+	struct sternBrocotTree *auxR;
+	auxL=(tree *)malloc(sizeof(tree));
+	auxR=(tree *)malloc(sizeof(tree));
+	auxL->denominador = a;
+	auxL->numerador = b;
+	auxR->denominador = c;
+	auxR->numerador = d;
+	auxR->right=auxR->left=NULL;
+	auxL->right=auxL->left=NULL;
+	head->left=auxL;
+	head->right= auxR;
+}
+
+
+
+void brocotTree(int a, int c) {
+	if (fmod(a / c, 1) != 0) {
+
+	} else
 	{
-	printf("%d / %d", a,a+c );
-	printf("\n%d / %d", a+c ,c);
-	printf("\n");
-	brocotTree(a,a+c);
-	brocotTree(a+c ,c);
+		insertNode(a, a + c, a + c, c);
+		printsternBrocotTree(head);
+//		printf("%d / %d", a, a + c);
+//		printf("\n%d / %d", a + c, c);
+//		printf("\n");
+//		brocotTree(a, a + c);
+//		brocotTree(a + c, c);
 	}
 
 }
 
 
-void main()
-{
-  int a,c;
-  brocotTree(1,1);
+void main() {
+
+	head= NULL;
+	brocotTree(1, 1);
 }
