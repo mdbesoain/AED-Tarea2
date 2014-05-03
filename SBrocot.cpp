@@ -43,6 +43,8 @@ struct Tree
 */
 
 struct Tree *sBrocotTree;
+int finalA=0;
+int finalB=0;
 void printVars( int ma, int mb,int caso)
 {	
 	switch(caso)
@@ -65,7 +67,11 @@ void printVars( int ma, int mb,int caso)
 
 	}
 }
-
+/*
+##############################################
+	   \begin{Funciones para manejar Arboles}
+##############################################
+*/
 
 void insert(int a,int b, struct Tree **tree, bool left)
 {	
@@ -77,17 +83,66 @@ void insert(int a,int b, struct Tree **tree, bool left)
 		(*tree)->left = NULL;    
         (*tree)->right = NULL;  
 	}
-	if(left)
-    {
-        insert( a, b, &(*tree)->left, false);
-    }
-    else
-    {
-        insert( a, b, &(*tree)->right, true );
-    }
-
+	else
+	 {
+		if(left)
+	    {
+	        insert( a, b, &(*tree)->left, true);
+	    }
+	    else
+	    {
+	        insert( a, b, &(*tree)->right, false );
+	    }
+	 }
 }
 
+bool printTree(struct Tree *tree)
+{
+	if(tree!=NULL)
+	{
+		cout << tree->num <<"/"<<tree->den<<"  ";
+		printTree(tree->left);
+		printTree(tree->right);
+	}
+	return true;
+}
+inline void printOutput(string ruta)
+{
+	cout << finalA<<" "<<finalB<<""<<ruta;
+}
+inline void changeFinals(int a , int b)
+{
+	finalA=a;
+	finalB=b;
+}
+bool findFraction(float result ,struct Tree *tree,string ruta)
+{	
+	
+	float actualResult;
+	if(tree!=NULL && result!=actualResult)
+	{   
+		actualResult= tree->num /tree->den;
+		changeFinals(tree->num,tree->den);	
+		if(result<actualResult)
+		{
+			ruta+"L";
+			findFraction(result,tree->left, ruta);
+			
+
+		}
+		if(result>actualResult)
+		{
+			ruta+"R";
+			
+			findFraction(result,tree->right,ruta);
+			
+		}
+		
+	}
+	printOutput(ruta);
+	return false;
+	
+}
 
 
 void findPosition(int a, int b)
@@ -104,8 +159,8 @@ void findPosition(int a, int b)
             Izqb = mb;
 			ma = ma + Dera;
             mb = mb + Derb;
-            insert(ma,mb,(*sBrocotTree),false);
-            printVars(ma,mb,1);
+            insert(ma,mb,(&sBrocotTree),false);
+            //printVars(ma,mb,1);
         }
         else if (b * ma > a * mb)
         {
@@ -114,13 +169,20 @@ void findPosition(int a, int b)
             Derb = mb;
             ma = ma + Izqa;
             mb = mb + Izqb;
-            insert(ma,mb,(*sBrocotTree),true);
-            printVars(ma,mb,2);
+            insert(ma,mb,(&sBrocotTree),true);
+            //printVars(ma,mb,2);
         }
         else
             break;
     }
 }
+/*
+##############################################
+	   \end{Funciones para manejar Arboles}
+##############################################
+*/
+
+
 /*
 ##############################################
 	    \begin{Funciones Utilitarias}
@@ -177,4 +239,6 @@ int main() {
     readAndExtractInputs();
     //printInputs();
     findPosition(inputs[0],inputs[1]);
+    //printTree(&(*sBrocotTree));
+    findFraction(input[0]/input[1],&(*sBrocotTree)," ");
 }
